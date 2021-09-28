@@ -28,6 +28,8 @@ detect_long_mode:
 
 no_long_mode:
     hlt
+    jmp $           ; Just in case
 
 no_CPUID:
     hlt
+    jmp $           ; Just in case

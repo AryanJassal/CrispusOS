@@ -32,7 +32,14 @@ setup_identity_paging:
     or eax, 1 << 8
     wrmsr
     ;---------------------
-    ; The section above was to set EFER (bruh wtf) model specific register
+    ; The section above was to set the long mode bit in EFER (bruh wtf) model specific register
+
+    ;---------------------
+    mov eax, cr0
+    or eax, 1 << 31
+    mov cr0, eax
+    ;---------------------
+    ; This section finally enables paging (i dont know what the hell we were doing previously then)
 
     ret
 
