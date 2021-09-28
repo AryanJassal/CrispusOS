@@ -39,7 +39,13 @@ start_protected_mode:
     mov fs, ax
     mov gs, ax
 
-    mov [0xb8000], byte 'Y'
+    mov [0xb8000], byte '('
+    mov [0xb8002], byte '.'
+    mov [0xb8004], byte 'Y'
+    mov [0xb8006], byte '.'
+    mov [0xb8008], byte ')'
+    mov [0xb800a], byte ' '
+
 
     call detect_CPUID               ; Detect if we can use CPUID to go into long (64 bit) mode
     call detect_long_mode           ; Detect if the processor supports long mode (64 bit mode)
@@ -47,7 +53,6 @@ start_protected_mode:
     call edit_gdt                   ; Prepare the GDT to enter 64 bit mode from 32 bit mode
 
     jmp codeseg:start_long_mode     ; Jump to start_long_mode label in 64 bit memory space
-
 
 ; Finally! 64 bit OS! Not that it does anything remotely like Windows x64, so stop comparing them.
 [BITS 64]

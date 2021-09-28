@@ -5,9 +5,9 @@ setup_identity_paging:
     mov cr3, edi                            ; Move [edi] to control register 3
     mov dword [edi], 0x2003                 ; The hex value points to the second table, along with setting some required flags. Don't touch this; it's magic!
     add edi, 0x1000                         ; Add 4096 to the value of the table origin to prepare for the second table
-    mov edi, 0x3003                         ; Second table stuff
+    mov dword [edi], 0x3003                   ; Second table stuff
     add edi, 0x1000
-    mov edi, 0x4003
+    mov dword [edi], 0x4003
     add edi, 0x1000                         ; Last table is a bit special; its HUGE (512 bytes (maybe))
     mov ebx, 0x00000003                     ; Sets the appropriate flags
     mov ecx, 512
@@ -20,7 +20,7 @@ setup_identity_paging:
     
     ;----------------------
     mov eax, cr4
-    or eax, 1 << 5                          ; Physical address extension paging requires PAE bit to be set in cr4 (control register 4)
+    or eax, 1 << 5          ; Physical address extension paging requires PAE bit to be set in cr4 (control register 4)
     mov cr4, eax
     ;----------------------
     ; The section above is to activate physical address extension paging
