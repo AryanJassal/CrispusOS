@@ -2,3 +2,5 @@
 *.o
 *.bin
 *.flp
+*.bxrc
+bin/

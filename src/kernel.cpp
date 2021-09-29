@@ -1,7 +1,8 @@
+#include "print.cpp"
+
 extern "C" void _start()
 {
-    int* ptr = (int*)0xb8000;
-    *ptr = 0x50505050;
+    set_cursor_position(position_from_coordinates(0, 0));
 
     return;
 }
