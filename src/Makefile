@@ -1,6 +1,9 @@
 install-apt:
 	sudo apt-get install nasm gcc qemu cat ld
 
+install-arch:
+	sudo pacman -S nasm gcc ld qemu cat
+
 prepare: bootloader.asm
 	nasm -f bin bootloader.asm -o boot.bin
 	nasm -f elf64 vdisk.asm -o vdisk.o
