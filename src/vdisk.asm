@@ -1,8 +1,7 @@
-[org 0x7e00]
-
 jmp enter_protected_mode
 
 %include 'gdt.asm'
+%include 'printf.asm'
 
 enter_protected_mode:
     call enable_a20             ; Enable the A20 memory lane (for more info, see here: https://wiki.osdev.org/A20_Line)
@@ -12,7 +11,7 @@ enter_protected_mode:
     mov eax, cr0
     or eax, 1                   ; Set PE (Protected Enable) flag in CR0 (Control Register 0) (2)
     mov cr0, eax
-    ;------------------------------
+    ;-------------------------------
     ; The above section does magic to tell the CPU that we now want to be in 32-bit protected mode
     jmp codeseg:start_protected_mode
 
@@ -56,15 +55,17 @@ start_protected_mode:
 
 ; Finally! 64 bit OS! Not that it does anything remotely like Windows x64, so stop comparing them.
 [BITS 64]
+[extern _start]
 
 start_long_mode:
     mov edi, 0xb8000
     mov rax, 0x1f201f201f201f20     ; Some vodoo crap that can only be done in 64 bit mode by using a 64-bit-exclusive register
     mov ecx, 500
     rep stosq                       ; This is some sort of black magic loop that loops. It wasn't explained. At all.
+    call _start
     jmp $
 
-times 4096-($-$$) db 0
+times 2048-($-$$) db 0
 
 ; More info here:
 ;   1. See bootloader.asm

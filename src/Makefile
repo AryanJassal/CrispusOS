@@ -1,20 +1,23 @@
 prepare: bootloader.asm
 	nasm -f bin bootloader.asm -o boot.bin
-	nasm -f bin diskstuff.asm -o extendeddisk.bin
-	cat boot.bin extendeddisk.bin > bootloader.bin
+	nasm -f elf64 vdisk.asm -o vdisk.o
+	x86_64-elf-gcc -ffreestanding -mno-red-zone -m64 -c "kernel.cpp" -o "kernel.o"
+	x86_64-elf-ld -o kernel.tmp -Ttext 0x7e00 vdisk.o kernel.o
+	objcopy -O binary kernel.tmp kernel.bin
+	cat boot.bin kernel.bin > bootloader.bin
 
-prepareb: bootloader.asm
+prepare-bochs: bootloader.asm
 	nasm -f bin bootloader.asm -o boot.bin
-	nasm -f bin diskstuff.asm -o extendeddisk.bin
-	cat boot.bin extendeddisk.bin > bootloader.flp
+	nasm -f elf64 vdisk.asm -o vdisk.o
+	x86_64-elf-gcc -ffreestanding -mno-red-zone -m64 -c "kernel.cpp" -o "kernel.o"
+	x86_64-elf-ld -o kernel.tmp -Ttext 0x7e00 vdisk.o kernel.o
+	objcopy -O binary kernel.tmp kernel.bin
+	cat boot.bin kernel.bin > bootloader.flp
 
 run: prepare
-	qemu-system-x86_64 bootloader.bin
+	qemu-system-x86_64 -drive file=bootloader.bin,if=floppy,index=0,media=disk,format=raw
 	rm *.bin
 	clear
-
-runb: prepareb
-
 
 clean:
 	rm *.bin

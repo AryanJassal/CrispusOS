@@ -3,15 +3,14 @@ DATA_SPACE equ 0x7e00
 readdisk:
     mov ah, 0x02            ; Tell the BIOS we'll be reading the disk
     mov bx, DATA_SPACE      ; Put the new data we read from the disk starting from mem location 0x7e00
-    mov al, 8               ; Read 8 sectors from disk
+    mov al, 16              ; Read n number of sectors from disk
     mov dl, [BOOT_DISK]     ; Read from the drive [boot drive]
     mov ch, 0x00            ; Cylinder 0
     mov dh, 0x00            ; Head 0
     mov cl, 0x02            ; Sector 2
 
     int 0x13                ; Read disk interrupt
-    jc diskreadfailed       ; What to do if failure to read disk
-
+    jc diskreadfailed
     ret
 
 diskreadfailed:
