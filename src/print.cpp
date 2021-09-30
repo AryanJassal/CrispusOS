@@ -2,6 +2,7 @@
 
 #include "io.cpp"
 #include "typedefs.cpp"
+#include "text_mode_color_codes.cpp"
 
 #define VGA_MEMORY (uint_8*) 0xb8000
 #define VGA_WIDTH 80
@@ -23,7 +24,22 @@ uint_16 position_from_coordinates(uint_16 x, uint_16 y)
     return y * VGA_WIDTH + x;
 }
 
-void print(const char* str)
+void clear_screen(uint_64 clear_color = BACKGROUND_BLACK | FOREGROUND_WHITE)
+{
+    uint_64 value = 0;
+    value += clear_color << 8;
+    value += clear_color << 24;
+    value += clear_color << 40;
+    value += clear_color << 56;
+
+    for (uint_64* i = (uint_64*)VGA_MEMORY; i < (uint_64*)(VGA_MEMORY + 4000); i++)
+    {
+        *i = value;
+    }
+    set_cursor_position(0);
+}
+
+void print(const char* str, uint_8 color = BACKGROUND_BLACK | FOREGROUND_WHITE)
 {
     uint_8* char_ptr = (uint_8*)str;        // Duplicate the input to change it without altering the input argument
     uint_16 cursor_index = cursor_position;
@@ -41,6 +57,7 @@ void print(const char* str)
 
             default:
                 *(VGA_MEMORY + cursor_index * 2) = *char_ptr;
+                *(VGA_MEMORY + cursor_index * 2 + 1) = color;
                 // VGA Memory offset by index (next character) times 2 (each character takes 2 memory spaces for char and formatting)
                 cursor_index++;
         }

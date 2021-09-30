@@ -7,6 +7,7 @@ extern "C" void _start()
     print(hex_to_string(0x1234abcd));
     print("\n\r");
     print(hex_to_string("Hi!"));
+    clear_screen();
 
     return;
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 #define FOREGROUND_BLACK 0x00
 #define FOREGROUND_BLUE 0x01
 #define FOREGROUND_GREEN 0x02
