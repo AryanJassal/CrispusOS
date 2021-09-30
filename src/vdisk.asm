@@ -63,9 +63,10 @@ start_long_mode:
     mov ecx, 500
     rep stosq                       ; This is some sort of black magic loop that loops. It wasn't explained. At all.
     call _start
+
     jmp $
 
-times 2048-($-$$) db 0
+times 4*512-($-$$) db 0
 
 ; More info here:
 ;   1. See bootloader.asm
